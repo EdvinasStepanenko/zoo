@@ -11,7 +11,147 @@
 		<link href="css/bootstrap.min.css" rel="stylesheet" />
 		<link href="font/css/all.min.css" rel="stylesheet" /> 
 		<link href="css/style.css" rel="stylesheet">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	</head>
+<style>
+ label, input { display:block; }
+    input.text { margin-bottom:12px; width:95%; padding: .4em; }
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }
+    div#users-contain { width: 350px; margin: 20px 0; }
+    div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+    div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: powderblue;
+  color: white;
+}
+</style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+ <script>
+  $( function() {
+    var dialog, form,
+ 
+      // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+      emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+	  id = $( "#id" ),
+      pav = $( "#pav" ),
+      narvo_nr = $( "#narvo_nr" ),
+      atgabentas = $( "#atgabentas" ),
+	  atgabentas_is = $( "#atgabentas_is" ),
+	  allFields = $( [] ).add( id ).add( pav ).add( narvo_nr ).add( atgabentas ).add( atgabentas_is ),
+      tips = $( ".validateTips" );
+ 
+    function updateTips( t ) {
+      tips
+        .text( t )
+        .addClass( "ui-state-highlight" );
+      setTimeout(function() {
+        tips.removeClass( "ui-state-highlight", 1500 );
+      }, 500 );
+    }
+ 
+    function checkLength( o, n, min, max ) {
+      if ( o.val().length > max || o.val().length < min ) {
+        o.addClass( "ui-state-error" );
+        updateTips( "Length of " + n + " must be between " +
+          min + " and " + max + "." );
+        return false;
+      } else {
+        return true;
+      }
+    }
+ 
+    function checkRegexp( o, regexp, n ) {
+      if ( !( regexp.test( o.val() ) ) ) {
+        o.addClass( "ui-state-error" );
+        updateTips( n );
+        return false;
+      } else {
+        return true;
+      }
+    }
+ 
+    function addUser() {
+      var valid = true;
+      allFields.removeClass( "ui-state-error" );
+	  
+	  valid = valid && checkLength( id, "id", 3, 16 );
+      valid = valid && checkLength( pav, "pav", 3, 16 );
+      valid = valid && checkLength( narvo_nr, "narvo_nr", 6, 80 );
+      valid = valid && checkLength( atgabentas, "atgabentas", 5, 16 );
+	  valid = valid && checkLength( atgabentas_is, "atgabentas_is", 5, 16 );
+	  
+	  valid = valid && checkRegexp( id, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+      valid = valid && checkRegexp( pav, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+      valid = valid && checkRegexp( narvo_nr, /^[a-z]([0-9a-z_\s])+$/i, "eg. ui@jquery.com" );
+      valid = valid && checkRegexp( atgabentas, /^[a-z]([0-9a-z_\s])+$/i, "Password field only allow : a-z 0-9" );
+	  valid = valid && checkRegexp( atgabentas_is, /^[a-z]([0-9a-z_\s])+$/i, "Password field only allow : a-z 0-9" );
+
+ 
+      if ( valid ) {
+        $( "#customers" ).append( "<tr>" +
+		
+		  "<td>" + id.val() + "</td>" +
+		  "<td>" + pav.val() + "</td>" +
+          "<td>" + narvo_nr.val() + "</td>" +
+          "<td>" + atgabentas.val() + "</td>" +
+		  "<td>" + atgabentas_is.val() + "</td>" +
+        "</tr>" );
+        dialog.dialog( "close" );
+     }
+      return valid;
+    }
+ 
+    dialog = $( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Pridėti": addUser,
+        "Atšaukti": function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        form[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+      }
+    });
+ 
+    form = dialog.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      addUser();
+    });
+ 
+    $( "#create-user" ).button().on( "click", function() {
+      dialog.dialog( "open" );
+	  //++ i redagavima
+    });
+  } );
+  </script>	
 <script>
 			function iTrinima ( id_rec ) {
 			
@@ -134,7 +274,7 @@
 		
 		if ( ( (  del = request.getParameter("del" ) ) != null) && del.equals ( "del1rec" ) ) {		
 
-			String sql_delete = "DELETE FROM `gyvunai` WHERE `gyvunai`. `id`='"+ id_gyv+"'";
+			String sql_delete = "DELETE FROM `gyvunai` WHERE `gyvunai`.`id`='"+ id_gyv+"'";
 			out.println ( sql_delete );
 			statement_change = connection.createStatement();
 			resultSetChange = statement_change.executeUpdate(sql_delete);
@@ -186,6 +326,31 @@
 <form id="del_rec" method="post" action="">
 <input type="hidden" name="del" value="del1rec">
 <input type="hidden" id="m_del" name="id_gyv" value="0">
+
+<div id="dialog-form" title="Pridėti naują gyvūną">
+  <p class="validateTips">Privaloma užpildyti visus laukelius</p>
+ 
+  <form>
+    <fieldset>
+	  <label for="id">Id</label>
+      <input type="text" name="id" id="id" value="" class="text ui-widget-content ui-corner-all">
+      <label for="tipas">Pavadinimas</label>
+      <input type="text" name="pav" id="pav" value="" class="text ui-widget-content ui-corner-all">
+	  <label for="pav">Narvo Numeris</label>
+      <input type="text" name="narvo_nr" id="narvo_nr" value="" class="text ui-widget-content ui-corner-all">
+	  <label for="name">Atgabentas</label>
+      <input type="text" name="atgabentas" id="atgabentas" value="" class="text ui-widget-content ui-corner-all">
+	  <label for="name">Atgabentas iš</label>
+      <input type="text" name="atgabentas_is" id="atgabentas_is" value="" class="text ui-widget-content ui-corner-all">
+
+	  
+ 
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+<button id="create-user">Pridėti naują gyvūną</button>
 </form>
 
 </div>
