@@ -97,21 +97,23 @@
       var valid = true;
       allFields.removeClass( "ui-state-error" );
 	  
-	  valid = valid && checkLength( id, "id", 3, 16 );
-      valid = valid && checkLength( pav, "pav", 3, 16 );
-      valid = valid && checkLength( narvo_nr, "narvo_nr", 6, 80 );
-      valid = valid && checkLength( atgabentas, "atgabentas", 5, 16 );
-	  valid = valid && checkLength( atgabentas_is, "atgabentas_is", 5, 16 );
+	//  valid = valid && checkLength( id, "id", 1, 16 );
+      valid = valid && checkLength( pav, "pav", 1, 1000 );
+      valid = valid && checkLength( narvo_nr, "narvo_nr", 1, 10000 );
+      valid = valid && checkLength( atgabentas, "atgabentas", 1, 10000 );
+	  valid = valid && checkLength( atgabentas_is, "atgabentas_is", 1, 1000 );
 	  
-	  valid = valid && checkRegexp( id, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
-      valid = valid && checkRegexp( pav, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
-      valid = valid && checkRegexp( narvo_nr, /^[a-z]([0-9a-z_\s])+$/i, "eg. ui@jquery.com" );
-      valid = valid && checkRegexp( atgabentas, /^[a-z]([0-9a-z_\s])+$/i, "Password field only allow : a-z 0-9" );
-	  valid = valid && checkRegexp( atgabentas_is, /^[a-z]([0-9a-z_\s])+$/i, "Password field only allow : a-z 0-9" );
+	//  valid = valid && checkRegexp( id, /([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+      valid = valid && checkRegexp( pav, /([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+      valid = valid && checkRegexp( narvo_nr, /([0-9a-z_\s])+$/i,"eg. ui@jquery.com" );
+      valid = valid && checkRegexp( atgabentas, /([0-9a-z_\s])+$/i, "Password field only allow : a-z 0-9" );
+	  valid = valid && checkRegexp( atgabentas_is, /([0-9a-z_\s])+$/i, "Password field only allow : a-z 0-9" );
 
  
       if ( valid ) {
-        $( "#customers" ).append( "<tr>" +
+		  	 $("#duomenys").submit();
+			 alert("asdf")
+		/* $( "#customers" ).append( "<tr>" +
 		
 		  "<td>" + id.val() + "</td>" +
 		  "<td>" + pav.val() + "</td>" +
@@ -119,8 +121,9 @@
           "<td>" + atgabentas.val() + "</td>" +
 		  "<td>" + atgabentas_is.val() + "</td>" +
         "</tr>" );
-        dialog.dialog( "close" );
+        dialog.dialog( "close" );*/
      }
+	 	 
       return valid;
     }
  
@@ -141,10 +144,10 @@
       }
     });
  
-    form = dialog.find( "form" ).on( "submit", function( event ) {
+   /* form = dialog.find( "form" ).on( "submit", function( event ) {
       event.preventDefault();
       addUser();
-    });
+    });*/
  
     $( "#create-user" ).button().on( "click", function() {
       dialog.dialog( "open" );
@@ -203,7 +206,7 @@
 
 		<h2 align="center"><strong>Zoologijos Sodas</strong></h2>
 		<form method="post" action="">	
-		<table class="table" align="center" cellpadding="5" cellspacing="5" border="1">
+		<table id="customers" class="table" align="center" cellpadding="5" cellspacing="5" border="1">
 		
 			<tr class="lent_virsus">
 				<th>Id</th>
@@ -230,7 +233,12 @@
 		String id_gyv = "0";
 		id_gyv = request.getParameter( "id_gyv" );
 		
-		if ( ( ( add = request.getParameter("add")  ) != null ) && add.equals ( "Įvesti" ) ) {
+		add = request.getParameter("add");
+		
+		out.println(add);
+		
+		if ( ( (  add  ) != null ) && add.equals ( "ivesti" ) ) {
+			
 	
 			for ( int i = 0; i< lent_zoo.length; i++ ) {
 			
@@ -303,7 +311,7 @@
 		e.printStackTrace();
 	}
 %>
-<tr class="lent_vidus">
+<!--<tr class="lent_vidus">
 							<td></td>
 							<td>
 								<input type="text" name="pav" id="pav" value="" required>
@@ -317,12 +325,12 @@
 							<td>
 								<input type="text" name="atgabentas_is" id="atgabentas_is" value="" required>
 							</td>
-							<td></td>
+							<td></td>-->
 							
 </table>
-<div>
-<input type="submit" name="add" value="Įvesti">
-</div>
+<!--<div>
+<input type="submit" name="add" value="ivesti">
+</div>-->
 </form>
 <form id="del_rec" method="post" action="">
 <input type="hidden" name="del" value="del1rec">
@@ -332,19 +340,19 @@
 <div id="dialog-form" title="Pridėti naują gyvūną">
   <p class="validateTips">Privaloma užpildyti visus laukelius</p>
  
-  <form>
+  <form id="duomenys" method="post">
     <fieldset>
-	  <label for="id">Id</label>
-      <input type="text" name="id" id="id" value="" class="text ui-widget-content ui-corner-all">
-      <label for="tipas">Pavadinimas</label>
-      <input type="text" name="pav" id="pav" value="" class="text ui-widget-content ui-corner-all">
-	  <label for="pav">Narvo Numeris</label>
-      <input type="text" name="narvo_nr" id="narvo_nr" value="" class="text ui-widget-content ui-corner-all">
-	  <label for="name">Atgabentas</label>
-      <input type="text" name="atgabentas" id="atgabentas" value="" class="text ui-widget-content ui-corner-all">
-	  <label for="name">Atgabentas iš</label>
-      <input type="text" name="atgabentas_is" id="atgabentas_is" value="" class="text ui-widget-content ui-corner-all">
-
+	<label for="id">Id</label>
+    <input type="text" name="id" id="id" value="" class="text ui-widget-content ui-corner-all">
+    <label for="tipas">Pavadinimas</label>
+    <input type="text" name="pav" id="pav" value="" class="text ui-widget-content ui-corner-all">
+	<label for="pav">Narvo Numeris</label>
+    <input type="text" name="narvo_nr" id="narvo_nr" value="" class="text ui-widget-content ui-corner-all">
+	<label for="name">Atgabentas</label>
+    <input type="text" name="atgabentas" id="atgabentas" value="" class="text ui-widget-content ui-corner-all">
+	<label for="name">Atgabentas iš</label>
+    <input type="text" name="atgabentas_is" id="atgabentas_is" value="" class="text ui-widget-content ui-corner-all">
+	<input type="hidden" name="add" value="ivesti">
 	  
  
       <!-- Allow form submission with keyboard without duplicating the dialog button -->
