@@ -155,7 +155,7 @@
 <script>
 			function iTrinima ( id_rec ) {
 			
-				mygtukasEdit = document.getElementById ( 'toEdit_' + id_rec );
+				mygtukasEdit = document.getElementById ( 'toDelete_' + id_rec );
 				
 				pav = mygtukasEdit.dataset.pav;
 				
@@ -211,6 +211,7 @@
 				<th>Narvo numeris</th>
 				<th>Atgabenimo data</th>
 				<th>Atgabenta iš</th>
+				<th>Del</th>
 			</tr>
 <%
 	
@@ -264,12 +265,7 @@
 				out.println ( add );
 			}
 		 } 
-		
-		statement_take = connection.createStatement();		
-		String sql ="SELECT * FROM `gyvunai`  WHERE 1";
-
-		resultSet = statement_take.executeQuery(sql);
-		
+			
 		String del = "";
 		
 		if ( ( (  del = request.getParameter("del" ) ) != null) && del.equals ( "del1rec" ) ) {		
@@ -279,20 +275,25 @@
 			statement_change = connection.createStatement();
 			resultSetChange = statement_change.executeUpdate(sql_delete);
 		}	
+		
+		statement_take = connection.createStatement();		
+		String sql ="SELECT * FROM `gyvunai`  WHERE 1";
+
+		resultSet = statement_take.executeQuery(sql);
 	 
 		while( resultSet.next() ){
 			
 		String id_rec = resultSet.getString ( "id" );
 					
-				
+		String pav = resultSet.getString ( "pav" );	
 %>
 <tr class="lent_vidus">
 	<td><%= resultSet.getString ( "id" ) %></td>
-	<td><%= resultSet.getString ( "pav" ) %></td>
+	<td><%= pav %></td>
 	<td><%= resultSet.getString  ("narvo_nr" ) %></td>
-	<td><%=resultSet.getString ( "atgabentas" ) %></td>
-	<td><%=resultSet.getString ( "atgabentas_is" ) %></td>
-	<td><input type="button" class="delete" id="toDelete_<%=id_rec %>"data-id_gyv="<%=id_rec %>" value="&#10006;" onClick="iTrinima( <%=id_rec %>)"></td>
+	<td><%= resultSet.getString ( "atgabentas" ) %></td>
+	<td><%= resultSet.getString ( "atgabentas_is" ) %></td>
+	<td><input type="button" class="delete" id="toDelete_<%=id_rec %>" data-id_gyv="<%= id_rec %>" data-pav="<%= pav %>"  value="&#10006;" onClick="iTrinima( <%=id_rec %>)"></td>
 </tr>
 
 <% 
@@ -303,7 +304,6 @@
 	}
 %>
 <tr class="lent_vidus">
-						
 							<td></td>
 							<td>
 								<input type="text" name="pav" id="pav" value="" required>
@@ -317,6 +317,7 @@
 							<td>
 								<input type="text" name="atgabentas_is" id="atgabentas_is" value="" required>
 							</td>
+							<td></td>
 							
 </table>
 <div>
@@ -326,6 +327,7 @@
 <form id="del_rec" method="post" action="">
 <input type="hidden" name="del" value="del1rec">
 <input type="hidden" id="m_del" name="id_gyv" value="0">
+</form>
 
 <div id="dialog-form" title="Pridėti naują gyvūną">
   <p class="validateTips">Privaloma užpildyti visus laukelius</p>
@@ -351,7 +353,7 @@
   </form>
 </div>
 <button id="create-user">Pridėti naują gyvūną</button>
-</form>
+
 
 </div>
 
