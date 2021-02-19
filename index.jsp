@@ -47,6 +47,29 @@
   color: white;
 }
 </style>
+<body>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+
+<%
+	String driverName = "com.mysql.jdbc.Driver";
+	String connectionUrl = "jdbc:mysql://localhost:3306/";
+	String dbName = "zoo";
+	String userId = "root";
+	String password = "";
+
+	Connection connection = null;
+	Statement statement_take = null;
+	Statement statement_change = null;
+	ResultSet resultSet = null;
+	int resultSetChange;
+	
+	String[] lent_zoo = { "pav", "narvo_nr", "atgabentas", "atgabentas_is" };
+	String[] lauk_zoo = new String [ lent_zoo.length ];   
+
+%>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
  <script>
@@ -129,8 +152,8 @@
  
     dialog = $( "#dialog-form" ).dialog({
       autoOpen: false,
-      height: 400,
-      width: 350,
+      height: 800,
+      width: 700,
       modal: true,
       buttons: {
         "Pridėti": addUser,
@@ -153,9 +176,7 @@
       dialog.dialog( "open" );
 	  //++ i redagavima
     });
-  } );
-  </script>	
-<script>
+
 			function iTrinima ( id_rec ) {
 			
 				mygtukasEdit = document.getElementById ( 'toDelete_' + id_rec );
@@ -163,7 +184,6 @@
 				pav = mygtukasEdit.dataset.pav;
 				
 				var r = confirm( "Ar norite pašalinti gyvūną?" + pav + "?" );
-				
 				
 				if ( r == true ) {
 					
@@ -176,32 +196,27 @@
 				
 			}
 			
+		//	function iRedagavima ( id_rec ) {
+		$('.record_edit').click(function(){
+		id_rec=$(this).data('id_gyv');
+				if (mygtukas = document.getElementById ('toEdit_' + id_rec) ) {
+<%				
+					for ( int i=0; i<lent_zoo.length; i++) {
+%>
+					document.getElementById('<%=lent_zoo [ i ] %>').value= mygtukas.dataset.<%=lent_zoo [ i ] %>;
+<%
+					}
+%>
+				document.getElementById( "id_gyv" ).value = id_rec
+				dialog.dialog("open");
+				}
+			} );
+	  } );
+	
+			
 
 </script>
 	
-<body>
-<%@page import="java.sql.DriverManager"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="java.sql.Statement"%>
-<%@page import="java.sql.Connection"%>
-
-<%
-	String driverName = "com.mysql.jdbc.Driver";
-	String connectionUrl = "jdbc:mysql://localhost:3306/";
-	String dbName = "zoo";
-	String userId = "root";
-	String password = "";
-
-	Connection connection = null;
-	Statement statement_take = null;
-	Statement statement_change = null;
-	ResultSet resultSet = null;
-	int resultSetChange;
-	
-	String[] lent_zoo = { "pav", "narvo_nr", "atgabentas", "atgabentas_is" };
-	String[] lauk_zoo = new String [ lent_zoo.length ];   
-
-%>
 <div class="container">
 
 		<h2 align="center"><strong>Zoologijos Sodas</strong></h2>
@@ -214,6 +229,7 @@
 				<th>Narvo numeris</th>
 				<th>Atgabenimo data</th>
 				<th>Atgabenta iš</th>
+				<th>Red</th>
 				<th>Del</th>
 			</tr>
 <%
@@ -291,6 +307,13 @@
 	 
 		while( resultSet.next() ){
 			
+		String rec_data = "";
+
+		for ( int i = 0; i<lauk_zoo.length; i++ ) {
+			
+			rec_data += "data-" + lent_zoo [ i ] + "=\"" + resultSet.getString	 ( lent_zoo [ i ] ) + "\"";
+		}
+			
 		String id_rec = resultSet.getString ( "id" );
 					
 		String pav = resultSet.getString ( "pav" );	
@@ -301,6 +324,7 @@
 	<td><%= resultSet.getString  ("narvo_nr" ) %></td>
 	<td><%= resultSet.getString ( "atgabentas" ) %></td>
 	<td><%= resultSet.getString ( "atgabentas_is" ) %></td>
+	<td><input type="button" class="record_edit" id="toEdit_<%=id_rec %>" data-id_gyv="<%=id_rec %>"<%=rec_data %> value="&#9998;"></td>   
 	<td><input type="button" class="delete" id="toDelete_<%=id_rec %>" data-id_gyv="<%= id_rec %>" data-pav="<%= pav %>"  value="&#10006;" onClick="iTrinima( <%=id_rec %>)"></td>
 </tr>
 
@@ -353,6 +377,7 @@
 	<label for="name">Atgabentas iš</label>
     <input type="text" name="atgabentas_is" id="atgabentas_is" value="" class="text ui-widget-content ui-corner-all">
 	<input type="hidden" name="add" value="ivesti">
+	<input type="hidden" id="id_gyv" name="id_gyv" value="0">
 	  
  
       <!-- Allow form submission with keyboard without duplicating the dialog button -->
