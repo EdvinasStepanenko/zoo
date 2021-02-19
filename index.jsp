@@ -156,7 +156,7 @@
       width: 700,
       modal: true,
       buttons: {
-        "Pridėti": addUser,
+        "Saugoti": addUser,
         "Atšaukti": function() {
           dialog.dialog( "close" );
         }
@@ -191,7 +191,24 @@
 					}
 %>
 				document.getElementById( "id_gyv" ).value = id_rec
-				dialog.dialog("open");
+				//$('#dialog-form').attr('title','Redaguojamas įrašas');
+				 dialogx = $( "#dialog-form" ).dialog({
+				  autoOpen: false,
+				  height: 800,
+				  width: 700,
+				  modal: true,
+				  buttons: {
+					"Redaguoti": addUser,
+					"Atšaukti": function() {
+					  dialog.dialog( "close" );
+					}
+				  },
+				  close: function() {
+					form[ 0 ].reset();
+					allFields.removeClass( "ui-state-error" );
+				  }
+				});
+				dialogx.dialog("open");
 				}
 			} );
 	  } );
@@ -213,7 +230,9 @@
 					forma_del.submit();
 				}
 				
-			}		
+			}
+
+			
 
 </script>
 	
@@ -377,13 +396,13 @@
 <input type="hidden" id="m_del" name="id_gyv" value="0">
 </form>
 
-<div id="dialog-form" title="Pridėti naują gyvūną">
+<div id="dialog-form" title="Įvesti duomenis">
   <p class="validateTips">Privaloma užpildyti visus laukelius</p>
  
   <form id="duomenys" method="post">
     <fieldset>
-	<label for="id">Id</label>
-    <input type="text" name="id" id="id" value="" class="text ui-widget-content ui-corner-all">
+	<!--<label for="id">Id</label>
+    <input type="text" name="id" id="id" value="" class="text ui-widget-content ui-corner-all">-->
     <label for="tipas">Pavadinimas</label>
     <input type="text" name="pav" id="pav" value="" class="text ui-widget-content ui-corner-all">
 	<label for="pav">Narvo Numeris</label>
