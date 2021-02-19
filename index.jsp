@@ -177,24 +177,7 @@
 	  //++ i redagavima
     });
 
-			function iTrinima ( id_rec ) {
-			
-				mygtukasEdit = document.getElementById ( 'toDelete_' + id_rec );
-				
-				pav = mygtukasEdit.dataset.pav;
-				
-				var r = confirm( "Ar norite pašalinti gyvūną?" + pav + "?" );
-				
-				if ( r == true ) {
-					
-					document.getElementById ( "m_del" ).value = id_rec;
-					
-					forma_del = document.getElementById ( "del_rec" );
-					//document.getElementById ( "id_gyv" ).value = id_gyv;
-					forma_del.submit();
-				}
-				
-			}
+
 			
 		//	function iRedagavima ( id_rec ) {
 		$('.record_edit').click(function(){
@@ -213,7 +196,24 @@
 			} );
 	  } );
 	
+				function iTrinima ( id_rec ) {
 			
+				mygtukasEdit = document.getElementById ( 'toDelete_' + id_rec );
+				
+				pav = mygtukasEdit.dataset.pav;
+				
+				var r = confirm( "Ar norite pašalinti gyvūną?" + pav + "?" );
+				
+				if ( r == true ) {
+					
+					document.getElementById ( "m_del" ).value = id_rec;
+					
+					forma_del = document.getElementById ( "del_rec" );
+					//document.getElementById ( "id_gyv" ).value = id_gyv;
+					forma_del.submit();
+				}
+				
+			}		
 
 </script>
 	
@@ -264,23 +264,39 @@
 			String sql_ins = "";
 			String comma = "";
 			
-			for ( int i = 0; i < lent_zoo.length; i++ ) {
+			if ( ( id_gyv == null ) || ( id_gyv.equals("0" ) ) ){ 
 			
-				sql_ins =  sql_ins + comma  + "'" + lauk_zoo [ i ] + "'";
-				comma = ",";																												
+				for ( int i = 0; i < lent_zoo.length; i++ ) {
+				
+					sql_ins =  sql_ins + comma  + "'" + lauk_zoo [ i ] + "'";
+					comma = ",";																												
+				}
+				
+				sql_ins = 
+					"INSERT INTO `gyvunai`"
+					+ " ( `pav`, `narvo_nr`, `atgabentas`, `atgabentas_is` )"
+					+ " VALUES ( "			
+					+ sql_ins
+					+ " )";
+
+				out.println ( sql_ins );
+
+				statement_change = connection.createStatement();
+				resultSetChange = statement_change.executeUpdate(sql_ins);		
+
+			} else {
+				
+				String sql_upd = "UPDATE `gyvunai` SET `pav`='"+request.getParameter("pav")+"', "
+				+ " `narvo_nr`='"+request.getParameter("narvo_nr")+"', "
+				+ " `atgabentas`='"+request.getParameter("atgabentas")+"', "
+				+ " `atgabentas_is`='"+request.getParameter("atgabentas_is")+"' "
+				+ " WHERE `gyvunai`.`id`='"+ id_gyv+"'";
+			
+				out.println ( sql_upd );
+				
+				statement_change = connection.createStatement();
+				resultSetChange = statement_change.executeUpdate(sql_upd);	
 			}
-			
-			sql_ins = 
-				"INSERT INTO `gyvunai`"
-				+ " ( `pav`, `narvo_nr`, `atgabentas`, `atgabentas_is` )"
-				+ " VALUES ( "			
-				+ sql_ins
-				+ " )";
-
-			out.println ( sql_ins );
-
-			statement_change = connection.createStatement();
-			resultSetChange = statement_change.executeUpdate(sql_ins);			
 			
 		 } else {
 		 
