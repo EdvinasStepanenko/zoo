@@ -52,6 +52,7 @@
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
+<%@page language="java" import="commons.Crud1" %>
 
 <%
 	String driverName = "com.mysql.jdbc.Driver";
@@ -69,6 +70,7 @@
 	String[] lent_zoo = { "pav", "narvo_nr", "atgabentas", "atgabentas_is" };
 	String[] lauk_zoo = new String [ lent_zoo.length ];   
 
+	Crud1 zoo_crud = new Crud1 ( dbName, userId, password, connectionUrl, "gyvunai",  lent_zoo );
 %>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -280,12 +282,12 @@
 				lauk_zoo [ i ] = request.getParameter ( lent_zoo [ i ] );
 			}
 			
-			String sql_ins = "";
-			String comma = "";
+		//	String sql_ins = "";
+		//	String comma = "";
 			
 			if ( ( id_gyv == null ) || ( id_gyv.equals("0" ) ) ){ 
 			
-				for ( int i = 0; i < lent_zoo.length; i++ ) {
+				/*for ( int i = 0; i < lent_zoo.length; i++ ) {
 				
 					sql_ins =  sql_ins + comma  + "'" + lauk_zoo [ i ] + "'";
 					comma = ",";																												
@@ -301,7 +303,9 @@
 				out.println ( sql_ins );
 
 				statement_change = connection.createStatement();
-				resultSetChange = statement_change.executeUpdate(sql_ins);		
+				resultSetChange = statement_change.executeUpdate(sql_ins);		*/
+				
+				zoo_crud.papildyti ( lauk_zoo );
 
 			} else {
 				
