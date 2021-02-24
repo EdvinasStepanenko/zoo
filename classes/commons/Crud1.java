@@ -96,7 +96,7 @@
 				
 				sql_upd = sql_upd.substring(0,sql_upd.length()- 1);
 				
-				sql_upd += " WHERE `" + lent + "`.`id` ='"+ id_iraso +"'";
+				sql_upd += " WHERE `" + lent + "`.`id`='"+ id_iraso +"'";
 			
 			System.out.println ( sql_upd );
 			
@@ -111,6 +111,27 @@
 			}
 			return resultSetChange;
 		}		
+		
+		public Integer delete ( String id_iraso ) {
+			
+			String sql_del = "";
+			
+			sql_del = "DELETE FROM `"+ lent +"` WHERE `"+ lent +"`.`id`='"+ id_iraso +"'";
+
+			System.out.println ( sql_del );
+			
+			
+			try {
+
+				statement_change = connection.createStatement();
+				resultSetChange = statement_change.executeUpdate(sql_del);			
+				
+			} catch ( Exception e ) {
+				
+				e.printStackTrace( System.out );
+			}
+			return resultSetChange;
+		}	
 		
 		
 		public String lentele()  {

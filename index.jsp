@@ -282,26 +282,12 @@
 				lauk_zoo [ i ] = request.getParameter ( lent_zoo [ i ] );
 			}
 			
-		//	String sql_ins = "";
-		//	String comma = "";
-			
 			if ( ( id_gyv == null ) || ( id_gyv.equals("0" ) ) ){ 
 							
 				zoo_crud.papildyti ( lauk_zoo );
 
 			} else {
-				
-			/*	String sql_upd = "UPDATE `gyvunai` SET `pav`='"+request.getParameter("pav")+"', "
-				+ " `narvo_nr`='"+request.getParameter("narvo_nr")+"', "
-				+ " `atgabentas`='"+request.getParameter("atgabentas")+"', "
-				+ " `atgabentas_is`='"+request.getParameter("atgabentas_is")+"' "
-				+ " WHERE `gyvunai`.`id`='"+ id_gyv+"'";
-			
-				out.println ( sql_upd );
-				
-				statement_change = connection.createStatement();
-				resultSetChange = statement_change.executeUpdate(sql_upd);	*/
-				
+							
 				zoo_crud.update ( lauk_zoo, id_gyv );
 			}
 			
@@ -317,10 +303,7 @@
 		
 		if ( ( (  del = request.getParameter("del" ) ) != null) && del.equals ( "del1rec" ) ) {		
 
-			String sql_delete = "DELETE FROM `gyvunai` WHERE `gyvunai`.`id`='"+ id_gyv+"'";
-			out.println ( sql_delete );
-			statement_change = connection.createStatement();
-			resultSetChange = statement_change.executeUpdate(sql_delete);
+			zoo_crud.delete ( id_gyv );
 		}	
 		
 		statement_take = connection.createStatement();		
