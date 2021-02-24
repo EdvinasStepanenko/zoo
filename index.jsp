@@ -286,30 +286,12 @@
 		//	String comma = "";
 			
 			if ( ( id_gyv == null ) || ( id_gyv.equals("0" ) ) ){ 
-			
-				/*for ( int i = 0; i < lent_zoo.length; i++ ) {
-				
-					sql_ins =  sql_ins + comma  + "'" + lauk_zoo [ i ] + "'";
-					comma = ",";																												
-				}
-				
-				sql_ins = 
-					"INSERT INTO `gyvunai`"
-					+ " ( `pav`, `narvo_nr`, `atgabentas`, `atgabentas_is` )"
-					+ " VALUES ( "			
-					+ sql_ins
-					+ " )";
-
-				out.println ( sql_ins );
-
-				statement_change = connection.createStatement();
-				resultSetChange = statement_change.executeUpdate(sql_ins);		*/
-				
+							
 				zoo_crud.papildyti ( lauk_zoo );
 
 			} else {
 				
-				String sql_upd = "UPDATE `gyvunai` SET `pav`='"+request.getParameter("pav")+"', "
+			/*	String sql_upd = "UPDATE `gyvunai` SET `pav`='"+request.getParameter("pav")+"', "
 				+ " `narvo_nr`='"+request.getParameter("narvo_nr")+"', "
 				+ " `atgabentas`='"+request.getParameter("atgabentas")+"', "
 				+ " `atgabentas_is`='"+request.getParameter("atgabentas_is")+"' "
@@ -318,7 +300,9 @@
 				out.println ( sql_upd );
 				
 				statement_change = connection.createStatement();
-				resultSetChange = statement_change.executeUpdate(sql_upd);	
+				resultSetChange = statement_change.executeUpdate(sql_upd);	*/
+				
+				zoo_crud.update ( lauk_zoo, id_gyv );
 			}
 			
 		 } else {

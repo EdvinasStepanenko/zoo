@@ -20,7 +20,7 @@
 		private Statement statement_change = null;
 		private ResultSet resultSet = null;
 		private int resultSetChange;
-	
+		private String comma = "";
 
 		public Crud1() {
 			
@@ -50,7 +50,7 @@
 			
 			String sql_ins = "";
 			String str_lauk = "";
-			String comma = "";
+
 			
 			for ( int i = 0; i < lent_lauk.length; i++ ) {
 			
@@ -68,6 +68,7 @@
 
 			System.out.println ( sql_ins );
 			
+			
 			try {
 
 				statement_change = connection.createStatement();
@@ -79,6 +80,38 @@
 			}
 			return resultSetChange;
 		}
+		
+		public Integer update ( String[] lent_lauk_reiksmes, String id_iraso ) {
+			
+			String sql_upd = "";
+			comma = ",";	
+
+			sql_upd += "UPDATE `" + lent + "` SET " ;
+			
+				for ( int i = 0; i < lent_lauk.length; i++ ) {
+				
+				sql_upd += "`" + (  lent_lauk [ i ]  ) +"`";
+				sql_upd += "='" + (  lent_lauk_reiksmes [ i ] ) + "'" + comma; 
+				} 
+				
+				sql_upd = sql_upd.substring(0,sql_upd.length()- 1);
+				
+				sql_upd += " WHERE `" + lent + "`.`id` ='"+ id_iraso +"'";
+			
+			System.out.println ( sql_upd );
+			
+			try {
+
+				statement_change = connection.createStatement();
+				resultSetChange = statement_change.executeUpdate(sql_upd);			
+				
+			} catch ( Exception e ) {
+				
+				e.printStackTrace( System.out );
+			}
+			return resultSetChange;
+		}		
+		
 		
 		public String lentele()  {
 			
