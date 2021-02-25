@@ -164,7 +164,7 @@
         }
       },
       close: function() {
-       // form[ 0 ].reset();
+        form[ 0 ].reset();
         allFields.removeClass( "ui-state-error" );
       }
     });
@@ -183,7 +183,7 @@
 			
 		//	function iRedagavima ( id_rec ) {
 		$('.record_edit').click(function(){
-		id_rec=$(this).data('id_rec');
+		id_rec=$(this).data('id_gyv');
 				if (mygtukas = document.getElementById ('toEdit_' + id_rec) ) {
 <%				
 					for ( int i=0; i<lent_zoo.length; i++) {
@@ -245,7 +245,7 @@
 		<table id="customers" class="table" align="center" cellpadding="5" cellspacing="5" border="1">
 		
 			<tr class="lent_virsus">
-				<!--<th>Id</th>-->
+				<th>Id</th>
 				<th>Pavadinimas</th>
 				<th>Narvo numeris</th>
 				<th>Atgabenimo data</th>
@@ -311,15 +311,36 @@
 
 		resultSet = statement_take.executeQuery(sql);
 	 
+		while( resultSet.next() ){
+			
+		String rec_data = "";
+
+		for ( int i = 0; i<lauk_zoo.length; i++ ) {
+			
+			rec_data += "data-" + lent_zoo [ i ] + "=\"" + resultSet.getString	 ( lent_zoo [ i ] ) + "\"";
+		}
+			
+		String id_rec = resultSet.getString ( "id" );
+					
+		String pav = resultSet.getString ( "pav" );	
+%>
+<tr class="lent_vidus">
+	<td><%= resultSet.getString ( "id" ) %></td>
+	<td><%= pav %></td>
+	<td><%= resultSet.getString  ("narvo_nr" ) %></td>
+	<td><%= resultSet.getString ( "atgabentas" ) %></td>
+	<td><%= resultSet.getString ( "atgabentas_is" ) %></td>
+	<td><input type="button" class="record_edit" id="toEdit_<%=id_rec %>" data-id_gyv="<%=id_rec %>"<%=rec_data %> value="&#9998;"></td>   
+	<td><input type="button" class="delete" id="toDelete_<%=id_rec %>" data-id_gyv="<%= id_rec %>" data-pav="<%= pav %>"  value="&#10006;" onClick="iTrinima( <%=id_rec %>)"></td>
+</tr>
+
+<% 
+		}
 	} catch (Exception e) {
 	
 		e.printStackTrace();
 	}
-	
-	
 %>
-
-<%=zoo_crud.lentele()%> 
 <!--<tr class="lent_vidus">
 							<td></td>
 							<td>

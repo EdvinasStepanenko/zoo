@@ -145,15 +145,27 @@
 			 
 				while( resultSet.next() ){
 					
+					String rec_data = "";
+
+					for ( int i = 0; i<lent_lauk.length; i++ ) {
+			
+						rec_data += " data-" + lent_lauk [ i ] + "=\"" + resultSet.getString ( lent_lauk [ i ] ) + "\"";
+					}
+						
+					String id_rec = resultSet.getString ( "id" );
+								
+					String pav = resultSet.getString ( "pav" );
 					
 					lent += "<tr>";
-					lent += "<td><input type=\"button\" class=\"record_edit\" data-id_miesto=\"\" value=\"&#9998;\"></td>";
 		
 					for ( int i = 0; i < lent_lauk.length; i++ ) {
 				
 						lent += "<td>" + resultSet.getString (  lent_lauk [ i ]  ) + "</td>";
 
 					}
+					lent += "<td><input type=\"button\" class=\"record_edit\" id=\"toEdit_" + id_rec + "\" data-id_rec=\"" + id_rec + "\"" + rec_data + " value=\"&#9998;\"></td>";
+					lent += "<td><input type=\"button\" class=\"delete\" id=\"toDelete_" + id_rec + "\" data-id_rec=\"" + id_rec + "\" data-pav=\"" + pav + "\"  value=\"&#10006;\" onClick=\"iTrinima( " + id_rec + " )\"></td>";
+
 					lent += "</tr>";
 
 				}
